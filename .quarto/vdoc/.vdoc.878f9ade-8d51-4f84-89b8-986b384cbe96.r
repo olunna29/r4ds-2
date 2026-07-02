@@ -1,18 +1,18 @@
----
-title: "Analyzing US Births and Basketball Recruits"
-author: "Oluchi Nnadi"
-format: html
-execute:
-  echo: false
----
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
+#
+#
 #| message: false
 library(tidyverse)
 library(readxl)
-```
-
-```{r}
+#
+#
+#
 #| cache: true
 births_tibble <- read_xlsx("data/us_births_1994_2014.xlsx") |>
   mutate(
@@ -22,11 +22,11 @@ births_tibble <- read_xlsx("data/us_births_1994_2014.xlsx") |>
       ordered = TRUE
     )
   )
-```
-
-This density plot shows the distribution of births by day of the week. The x-axis represents the days of the month, while the y-axis represents the density of births. The plot reveals that there are fewer births on holidays such as Christmas and New Year's Day, and more births in late summer and early fall. 
-
-```{r}
+#
+#
+#
+#
+#
 births_tibble |>
   group_by(month, date_of_month) |>
   summarize(avg_births = mean(births), .groups = "drop") |>
@@ -41,9 +41,9 @@ births_tibble |>
     y = "Month",
     fill = "Average Births"
   )
-```
-
-```{r}
+#
+#
+#
 #| cache: true
 births_tibble |>
   filter(month == 12) |>
@@ -61,10 +61,10 @@ births_tibble |>
   mutate(christmas_pct = (christmas / surrounding) * 100) |>
   select(year, christmas, surrounding, christmas_pct) |>
   summary()
-```
-
-This plot shows that there are additional variables that affect Christmas Day births. There's a lower proportion of births on Saturday's and Sunday's compared to other days of the week.
-```{r}
+#
+#
+#
+#
 births_tibble |>
   filter(month == 12, date_of_month == 25) |>
   select(year, day_of_week) |>
@@ -96,30 +96,30 @@ births_tibble |>
     y = "Percentage of Baseline (%)",
     color = "Day of Week"
   )
-```
-
-This is the r-squared value of the linear model that predicts births based on year, month, and day of the week. The r-squared value indicates how well the model explains the variability in the number of births. A higher r-squared value suggests that the model is a good fit for the data.
-```{r}
+#
+#
+#
+#
 births_model <- lm(births ~ factor(year) + factor(month) + day_of_week, data = births_tibble)
 summary(births_model)$r.squared
-```
-
-```{r}
+#
+#
+#
 births_adjusted <- births_tibble |>
   mutate(pct_resid = residuals(births_model) / mean(births) * 100)
-```
-
-```{r}
+#
+#
+#
 calendar_resid <- births_adjusted |>
   filter(!(month == 2 & date_of_month == 29)) |>
   group_by(month, date_of_month) |>
   summarize(mean_pct_resid = mean(pct_resid), .groups = "drop") |>
   mutate(calendar_date = make_date(2001, month, date_of_month))
 
-```
-
-This plot shows the average percent residuals of births by calendar date. The x-axis represents the calendar date, while the y-axis represents the mean percent residuals. The plot reveals that there are significant dips in births on holidays such as Christmas Day, Independence Day, Christmas Eve, and New Year's Day. These dips indicate that there are fewer births than expected on these holidays, which may be due to various factors such as scheduling of elective procedures or cultural practices.
-```{r}
+#
+#
+#
+#
 holiday_dips <- tibble::tribble(
   ~calendar_date, ~mean_pct_resid, ~holiday,
   as.Date("2001-12-25"), -39.4, "Christmas Day",
@@ -144,9 +144,9 @@ calendar_resid |>
     x = "Calendar Date",
     y = "Mean Percent Residual"
   )
-```
-
-```{r}
+#
+#
+#
 #| cache: true
 basketball_tibble <- read_excel("data/nba_recruits.xlsx") |>
   mutate(
@@ -163,10 +163,10 @@ basketball_tibble <- read_excel("data/nba_recruits.xlsx") |>
       ordered = TRUE
     )
   ) 
-```
-
-This plots shows how the career tier of basketball players varies by their recruit group. The x-axis represents the recruit group, while the y-axis represents the proportion of players in each career tier. The plot reveals that higher-ranked recruits are more likely to reach the top tiers, while lower-ranked recruits are more likely to have shorter careers or never play professionally.
-```{r}
+#
+#
+#
+#
 basketball_tibble |>
   filter(recruit_group != "Outside top 100") |>
   ggplot(aes(x = recruit_group, fill = tier)) +
@@ -179,10 +179,10 @@ basketball_tibble |>
     y = "Proportion of Players",
     fill = "Career Tier"
   )
-```
-
-This plot shows the relationship between recruit rank and career production, measured by Win Shares per 48 minutes. The x-axis represents the recruit rank, while the y-axis represents the career Win Shares per 48 minutes. The flat lines imply no real correlation.
-```{r}
+#
+#
+#
+#
 basketball_tibble |>
   filter(!is.na(rank), !is.na(top_mean_wa)) |>
   ggplot(aes(x = rank, y = top_mean_wa, color = tier)) +
@@ -203,6 +203,9 @@ basketball_tibble |>
     y = "Career Win Shares per 48 Minutes",
     color = "Career Tier"
   )
-```
-
-
+#
+#
+#
+#
+#
+#
